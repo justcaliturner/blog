@@ -179,6 +179,7 @@
 
 .post-md code {
     font-family: Consolas, Monaco, monospace;
+    color: var(--font-color-2);
     line-height: 1.5;
     word-wrap: break-word;
     padding: .2em .4em;
