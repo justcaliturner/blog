@@ -1,0 +1,13 @@
+<div class="post-list">
+    <% page.posts.each(function (post) { %>
+    <div class="post">
+        <a class="post-title" href="<%- url_for(post.path) %>"><%= post.title %></a>
+        <a class="post-except"  href="<%- url_for(post.path) %>">
+            <%- strip_html(post.content).substr(0, 240) %>
+            <span class="read-more"> ... </span>
+        </a>
+        <div class="post-date"><%- date(post.date, "YYYY.MM.DD") %></div>
+    </div>
+    <% }) %>
+</div>
+<%- partial('_partial/paginator') %>
