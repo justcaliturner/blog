@@ -188,3 +188,15 @@ code {
     border-radius: 6px;
     background-color: rgba(175, 184, 193, 0.2);
 }
+
+@media screen and (max-width: 640px) {
+    code.hljs {
+        font-size: 14px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    code.hljs {
+        font-size: 13px;
+    }
+}

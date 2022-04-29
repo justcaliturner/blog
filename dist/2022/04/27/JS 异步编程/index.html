@@ -51,9 +51,10 @@
 <h5 id="同步和异步"><a href="#同步和异步" class="headerlink" title="同步和异步"></a>同步和异步</h5><ul>
 <li><p>同步：任务的执行顺序和排列顺序相同，多个任务会在主线程中逐个依次执行，下一个任务必须等待上一个任务完成后才可执行，优点是执行起来逻辑清晰明了，缺点是若上一个任务执行较久则会发生线程阻塞的情况。</p>
 </li>
-<li><p>异步：任务的执行顺序和排列顺序可不同，上一个任务正在执行等待结果的同时，下一个任务即可被执行，优点是不容易阻塞线程，缺点是多任务执行顺序交错复杂，难以预估。<br><img src="/./images/1.jpg" alt="This is an image"></p>
+<li><p>异步：任务的执行顺序和排列顺序可不同，上一个任务正在执行等待结果的同时，下一个任务即可被执行，优点是不容易阻塞线程，缺点是多任务执行顺序交错复杂，难以预估。</p>
 </li>
 </ul>
+<p><img src="/./images/1.jpg" alt="This is an image"></p>
 <h5 id="JavaScript-的异步实现"><a href="#JavaScript-的异步实现" class="headerlink" title="JavaScript 的异步实现"></a>JavaScript 的异步实现</h5><p>JavaScript 引擎是单线程的，故在其主线程中只能进行同步编程，无法实现异步编程，但浏览器环境和 Node.js 环境是多线程的，比如浏览器内有：GUI 线程、JS 引擎线程、定时器线程、事件触发线程、异步 http 请求线程，所以某些时候 JS 可以通过与环境内的其他线程进行通讯，以实现异步编程的效果，总而言之，JavaScript 的异步实现本质上是在解决如何让 JavaScript 的主线程与环境内的其他线程进行通讯，其原理就是通过一个中间桥梁 “消息队列” 让主线程与其他线程进行交互。</p>
 <p><img src="/./images/2.jpg" alt="This is an image"></p>
 <h5 id="异步实现之事件轮询"><a href="#异步实现之事件轮询" class="headerlink" title="异步实现之事件轮询"></a>异步实现之事件轮询</h5><p><img src="/./images/3.jpg" alt="This is an image"></p>
