@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport" />
+    <link rel="alternate icon" type="image/png" href="/img/favicon.ico">
+    <title>Vic&#39;s Blog</title>
+    
+<link rel="stylesheet" href="/css/reset.css">
+
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    
+<link rel="stylesheet" href="/css/markdown.css">
+
+    
+<link rel="stylesheet" href="/css/fonts.css">
+
+<meta name="generator" content="Hexo 6.1.0"></head>
+    <body>
+        <div class="paper">
+            <div class="paper-main">
+                
+                    <div class="post-header">
+    <a class="logo" href="/">Vic&#39;s Blog</a>
+    <a class="go-home" href="/">
+        <svg width="8" height="14" viewBox="0 0 8 14">
+            <path d="M7 1L1 7l6 6" stroke="#000" stroke-width="2" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </a>
+</div>
+                
+                <div class="post-main">
+
+    
+        <div class="post-main-title">
+            JS 异步编程
+        </div>
+        <div class="post-meta">
+            2022-04-27
+        </div>
+    
+
+    <div class="post-md">
+        <p>最近因项目需要，使用了后端 Node.js 相关的一些工具，对于一直写前端的我来说遇到了一些没怎么接触过的基础知识，比如异步编程，虽然这是种编程方法，不区分前后端环境，但对我这个前端小白来说，之前确实接触的不多，这里记录一些学习笔记。</p>
+<h5 id="多线程和单线程"><a href="#多线程和单线程" class="headerlink" title="多线程和单线程"></a>多线程和单线程</h5><ul>
+<li>多线程：程序可在多个线程中同时执行多个任务</li>
+<li>单线程：程序在单线程中仅可依次执行单个任务</li>
+</ul>
+<h5 id="同步和异步"><a href="#同步和异步" class="headerlink" title="同步和异步"></a>同步和异步</h5><ul>
+<li><p>同步：任务的执行顺序和排列顺序相同，多个任务会在主线程中逐个依次执行，下一个任务必须等待上一个任务完成后才可执行，优点是执行起来逻辑清晰明了，缺点是若上一个任务执行较久则会发生线程阻塞的情况。</p>
+</li>
+<li><p>异步：任务的执行顺序和排列顺序可不同，上一个任务正在执行等待结果的同时，下一个任务即可被执行，优点是不容易阻塞线程，缺点是多任务执行顺序交错复杂，难以预估。<br><img src="/./images/1.jpg" alt="This is an image"></p>
+</li>
+</ul>
+<h5 id="JavaScript-的异步实现"><a href="#JavaScript-的异步实现" class="headerlink" title="JavaScript 的异步实现"></a>JavaScript 的异步实现</h5><p>JavaScript 引擎是单线程的，故在其主线程中只能进行同步编程，无法实现异步编程，但浏览器环境和 Node.js 环境是多线程的，比如浏览器内有：GUI 线程、JS 引擎线程、定时器线程、事件触发线程、异步 http 请求线程，所以某些时候 JS 可以通过与环境内的其他线程进行通讯，以实现异步编程的效果，总而言之，JavaScript 的异步实现本质上是在解决如何让 JavaScript 的主线程与环境内的其他线程进行通讯，其原理就是通过一个中间桥梁 “消息队列” 让主线程与其他线程进行交互。</p>
+<p><img src="/./images/2.jpg" alt="This is an image"></p>
+<h5 id="异步实现之事件轮询"><a href="#异步实现之事件轮询" class="headerlink" title="异步实现之事件轮询"></a>异步实现之事件轮询</h5><p><img src="/./images/3.jpg" alt="This is an image"></p>
+<ul>
+<li>事件轮询 Event loop<blockquote>
+<p>一个为实现 JS 并发模型的执行机制，负责执行、收集、处理事件及其子任务，简单讲是为了实现异步执行的一种机制，其本质是不断重复从消息队列中取出消息并执行的一种过程。</p>
+</blockquote>
+<ul>
+<li>栈 Stack<blockquote>
+<p>函数调用形成的一个由多个帧组成的栈。</p>
+</blockquote>
+</li>
+<li>堆 Heap<blockquote>
+<p>对象被分配在堆中，一个用来表示一大块（通常是非结构化）的内存区域。</p>
+</blockquote>
+</li>
+<li>消息队列 Message queue<blockquote>
+<p>JavaScript 运行时的一个待处理消息的消息队列，每一个消息都关联着一个用以处理这个消息的回调函数，其逻辑是先进先出。</p>
+</blockquote>
+</li>
+</ul>
+</li>
+</ul>
+<h5 id="事件轮询中异步任务的执行逻辑"><a href="#事件轮询中异步任务的执行逻辑" class="headerlink" title="事件轮询中异步任务的执行逻辑"></a>事件轮询中异步任务的执行逻辑</h5><p>异步任务分为宏任务和微任务，事件轮询中会先执行宏任务，再执行微任务，依次循环往复。<br><img src="/./images/4.jpg" alt="This is an image"></p>
+<ul>
+<li>异步任务 Asynchronous task<ul>
+<li>宏任务 Macro task<ul>
+<li>script </li>
+<li>setTimeout&#x2F;setInterval</li>
+<li>setlmmediate</li>
+<li>I&#x2F;O</li>
+<li>UI rendering</li>
+</ul>
+</li>
+<li>微任务 Micro task<ul>
+<li>Promise</li>
+<li>Object.observe</li>
+<li>MutationObserver</li>
+<li>postMessage</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h5 id="举例：setTimeout"><a href="#举例：setTimeout" class="headerlink" title="举例：setTimeout"></a>举例：<code>setTimeout</code></h5><ul>
+<li><code>setTimeout</code> 是一个异步的宏任务，当它被调用时，会先将回调方法移出此次执行，等下一次事件轮询时检查是否到了指定时间，如果到了，执行回调方法，如果没到，则等待下一次事件轮询的检查。</li>
+<li>其中计时任务会在浏览器的定时器线程中执行，因为主线程可能会阻塞导致计时不准确，而具体到浏览器的运行环境，最终都会调用到操作系统的定时器。</li>
+<li>因无法确定 <code>setTimeout</code> 调用前是否还有待执行的同步任务，所以 <code>setTimeout</code> 本质上无法确定开始执行的时间，只能确定结束时间和持续时长。</li>
+</ul>
+<h5 id="异步任务的控制"><a href="#异步任务的控制" class="headerlink" title="异步任务的控制"></a>异步任务的控制</h5><p>上文讲到多个异步任务的执行顺序交错复杂，难以预估，那么有效的控制其在上下文中的执行顺序就显得非常关键，这里就不得不提到 <code>Promise</code> 和 <code>async</code> <code>await</code> 的使用</p>
+<h5 id="Promise"><a href="#Promise" class="headerlink" title="Promise"></a><code>Promise</code></h5><p><code>Promise</code> 对象用于表示一个异步任务的最终完成状态，有如下三种状态：</p>
+<ul>
+<li>等待中（pending）: 表示还未得到执行结果。</li>
+<li>已兑现（fulfilled）: 表示操作成功完成的结果。</li>
+<li>已拒绝（rejected）: 表示操作失败的结果。</li>
+</ul>
+<p>它的可以通过 <code>new Promise(executor)</code> 实例化一个 Promise 对象，它的作用是通过获取异步任务的三种不同状态来控制上下文任务的执行顺序：</p>
+<pre><code class="hljs javascript"><span class="hljs-keyword">function</span> <span class="hljs-title function_">demo1</span>(<span class="hljs-params"></span>) &#123;
+    <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> &#123;
+        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-number">1</span>)
+    &#125;, <span class="hljs-number">1000</span>)
+&#125;
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">demo2</span>(<span class="hljs-params"></span>) &#123;
+    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-number">2</span>)
+&#125;
+<span class="hljs-title function_">demo1</span>()
+<span class="hljs-title function_">demo2</span>()
+<span class="hljs-comment">// 以上代码的执行结果为 2, 1</span>
+<span class="hljs-comment">// 因为 demo1 的 setTimeout 是异步任务，</span>
+<span class="hljs-comment">// demo2 不会等 demo1 的结果出现再执行</span>
+
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">demo1</span>(<span class="hljs-params"></span>) &#123;
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>) =&gt;</span> &#123;
+        <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">()=&gt;</span>&#123;
+            <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-number">1</span>)
+            <span class="hljs-title function_">resolve</span>()
+        &#125;, <span class="hljs-number">1000</span>)
+    &#125;)
+&#125;
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">demo2</span>(<span class="hljs-params"></span>) &#123;
+    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-number">2</span>)
+&#125;
+<span class="hljs-title function_">demo1</span>().<span class="hljs-title function_">then</span>(demo2)
+<span class="hljs-comment">// 以上代码的执行结果为 1, 2</span>
+<span class="hljs-comment">// 因为 demo2 需要等 demo1 的 Promise 实例的结果出现才会执行</span></code></pre>
+
+
+<h6 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h6><p>该对象可传入一个类型为函数的参数，用于被构造函数执行，该函数可传入 2 个参数，它们的类型也是函数，第一个参数会在 Promise 实例已兑现时调用，第二个参数会在 Promise 实例已拒绝时调用：</p>
+<pre><code class="hljs javascript"><span class="hljs-keyword">const</span> demo = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>)=&gt;</span>&#123;
+    <span class="hljs-comment">// 其他代码</span>
+    <span class="hljs-title function_">resolve</span>() <span class="hljs-comment">// 已兑现时调用</span>
+    <span class="hljs-title function_">reject</span>() <span class="hljs-comment">// 已拒绝时调用</span>
+&#125;)</code></pre>
+
+<p><code>resolve()</code> 可传入一个参数，作为 Promise 实例成功完成的执行结果，同样，<code>reject()</code> 可传入一个参数作为 Promise 实例错误时的结果：</p>
+<pre><code class="hljs javascript"><span class="hljs-keyword">const</span> demo1 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>)=&gt;</span>&#123;
+    <span class="hljs-keyword">const</span> result = <span class="hljs-string">&#x27;Success!&#x27;</span>
+    <span class="hljs-title function_">resolve</span>(result) <span class="hljs-comment">// result 将会作为执行成功的结果</span>
+&#125;)
+
+<span class="hljs-keyword">const</span> demo2 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>)=&gt;</span>&#123;
+    <span class="hljs-keyword">const</span> error = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">&#x27;failed&#x27;</span>)
+    <span class="hljs-title function_">reject</span>(error) <span class="hljs-comment">// result 将会作为执行错误的结果</span>
+&#125;)</code></pre>
+
+<h6 id="Promise-then"><a href="#Promise-then" class="headerlink" title="Promise.then()"></a><code>Promise.then()</code></h6><p><code>Promise.then()</code> 顾名思义就是当 Promise 实例完成后（执行错误或成功），继续执行其他代码的方法，它可传入一个类型为函数的参数作为继续执行的函数，该函数会接收一个参数，该参数是 Promise 实例的执行结果，它会作为参数传入该函数内。</p>
+<pre><code class="hljs javascript"><span class="hljs-keyword">const</span> demo = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>)=&gt;</span>&#123;
+    <span class="hljs-keyword">const</span> result = <span class="hljs-string">&#x27;Success!&#x27;</span>
+    <span class="hljs-title function_">resolve</span>(result)
+&#125;)
+demo.<span class="hljs-title function_">then</span>(<span class="hljs-function">(<span class="hljs-params">result</span>)=&gt;</span>&#123;
+    <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(result) <span class="hljs-comment">// Success!</span>
+&#125;)
+</code></pre>
+
+<h6 id="Promise-all"><a href="#Promise-all" class="headerlink" title="Promise.all()"></a><code>Promise.all()</code></h6><p><code>Promise.all()</code> 是等待所有的 Promise 实例都完成（或第一个失败）后调用的方法：</p>
+<pre><code class="hljs javascript"><span class="hljs-keyword">const</span> demo1 = <span class="hljs-title class_">Promise</span>.<span class="hljs-title function_">resolve</span>(<span class="hljs-number">1</span>);
+<span class="hljs-keyword">const</span> demo2 = <span class="hljs-number">2</span>;
+<span class="hljs-keyword">const</span> demo3 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>) =&gt;</span> &#123;
+  <span class="hljs-built_in">setTimeout</span>(resolve, <span class="hljs-number">100</span>, <span class="hljs-number">3</span>);
+&#125;);
+
+<span class="hljs-title class_">Promise</span>.<span class="hljs-title function_">all</span>([demo1, demo2, demo3]).<span class="hljs-title function_">then</span>(<span class="hljs-function">(<span class="hljs-params">values</span>) =&gt;</span> &#123;
+  <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(values); <span class="hljs-comment">// [ 1, 2, 3 ]</span>
+&#125;);</code></pre>
+<h6 id="链式调用"><a href="#链式调用" class="headerlink" title="链式调用"></a>链式调用</h6><p><code>Promise.then()</code> 方法将进一步的操作与一个变为已敲定状态的 Promise 关联起来，这些方法还会返回一个新生成的 Promise 对象，这个对象可以被非强制性的用来做链式调用：</p>
+<pre><code class="hljs javascript"><span class="hljs-keyword">const</span> demo1 = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) &#123;
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>) =&gt;</span> &#123;
+        <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">()=&gt;</span>&#123;
+            <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-number">1</span>)
+            <span class="hljs-title function_">resolve</span>()
+        &#125;, <span class="hljs-number">1000</span>)
+    &#125;)
+&#125;
+<span class="hljs-keyword">const</span> demo2 = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) &#123;
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>) =&gt;</span> &#123;
+        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-number">2</span>)
+        <span class="hljs-title function_">resolve</span>()
+    &#125;)
+&#125;
+<span class="hljs-keyword">const</span> demo3 = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) &#123;
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>) =&gt;</span> &#123;
+        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-number">3</span>)
+        <span class="hljs-title function_">resolve</span>()
+    &#125;)
+&#125;
+
+<span class="hljs-title function_">demo1</span>().<span class="hljs-title function_">then</span>(demo2).<span class="hljs-title function_">then</span>(demo3) <span class="hljs-comment">// 1, 2, 3</span></code></pre>
+
+<br>
+
+<h5 id="async-await"><a href="#async-await" class="headerlink" title="async await"></a><code>async</code> <code>await</code></h5><p><code>async</code> 可声明一个函数为异步函数<br><code>await</code> 操作符用于等待一个 Promise 对象敲定其状态, 它只能在异步函数 async function 内部使用，其简化了 Promise 的一些常规写法：</p>
+<pre><code class="hljs javascript"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">foo</span>(<span class="hljs-params"></span>) &#123;
+   <span class="hljs-keyword">await</span> <span class="hljs-number">1</span>
+&#125;</code></pre>
+<p>以上代码等价于</p>
+<pre><code class="hljs javascript"><span class="hljs-keyword">function</span> <span class="hljs-title function_">foo</span>(<span class="hljs-params"></span>) &#123;
+   <span class="hljs-keyword">return</span> <span class="hljs-title class_">Promise</span>.<span class="hljs-title function_">resolve</span>(<span class="hljs-number">1</span>).<span class="hljs-title function_">then</span>(<span class="hljs-function">() =&gt;</span> <span class="hljs-literal">undefined</span>)
+&#125;</code></pre>
+
+<p>如下案例简化了上文 <code>Promise</code> 中的最后一个案例</p>
+<pre><code class="hljs javascript"><span class="hljs-keyword">const</span> demo1 = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) &#123;
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>) =&gt;</span> &#123;
+        <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">()=&gt;</span>&#123;
+            <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-number">1</span>)
+            <span class="hljs-title function_">resolve</span>()
+        &#125;, <span class="hljs-number">1000</span>)
+    &#125;)
+&#125;
+<span class="hljs-keyword">const</span> demo2 = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) &#123;
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>) =&gt;</span> &#123;
+        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-number">2</span>)
+        <span class="hljs-title function_">resolve</span>()
+    &#125;)
+&#125;
+<span class="hljs-keyword">const</span> demo3 = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) &#123;
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>) =&gt;</span> &#123;
+        <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(<span class="hljs-number">3</span>)
+        <span class="hljs-title function_">resolve</span>()
+    &#125;)
+&#125;
+
+<span class="hljs-keyword">function</span> <span class="hljs-title function_">demo</span>(<span class="hljs-params"></span>)&#123;
+    <span class="hljs-title function_">demo1</span>()
+    <span class="hljs-title function_">demo2</span>()
+    <span class="hljs-title function_">demo3</span>()
+&#125;
+
+<span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">asyncDemo</span>(<span class="hljs-params"></span>)&#123;
+    <span class="hljs-keyword">await</span> <span class="hljs-title function_">demo1</span>()
+    <span class="hljs-keyword">await</span> <span class="hljs-title function_">demo2</span>()
+    <span class="hljs-keyword">await</span> <span class="hljs-title function_">demo3</span>()
+&#125;
+<span class="hljs-title function_">demo</span>() <span class="hljs-comment">// 2, 3, 1</span>
+<span class="hljs-title function_">asyncDemo</span>() <span class="hljs-comment">// 1, 2, 3</span></code></pre>
+    </div>
+
+</div>
+                <div class="footer">
+    <span>Recorded by <a target="_blank" href="https://vicuxd.com">Vic</a></span>
+</div>
+
+
+<link rel="stylesheet" href="/css/atom-one-dark.css">
+
+
+<script src="/js/highlight.min.js"></script>
+
+
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+
+            </div>
+        </div>
+    </body>
+</html>
