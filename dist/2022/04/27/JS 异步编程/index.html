@@ -145,8 +145,8 @@
 <h6 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h6><p><code>Promise</code> 对象可传入一个类型为函数的参数，用于被构造函数执行，该函数可传入 2 个参数，它们的类型也是函数，第一个参数会在 Promise 实例成功完成时调用，第二个参数会在 Promise 实例发生错误拒绝时调用：</p>
 <pre><code class="hljs javascript"><span class="hljs-keyword">const</span> demo = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>)=&gt;</span>&#123;
     <span class="hljs-comment">// 其他代码</span>
-    <span class="hljs-title function_">resolve</span>() <span class="hljs-comment">// 已兑现时调用</span>
-    <span class="hljs-title function_">reject</span>() <span class="hljs-comment">// 已拒绝时调用</span>
+    <span class="hljs-title function_">resolve</span>() <span class="hljs-comment">// 成功完成时调用</span>
+    <span class="hljs-title function_">reject</span>() <span class="hljs-comment">// 发生错误时调用</span>
 &#125;)</code></pre>
 
 <p><code>resolve()</code> 可传入一个参数，作为 Promise 实例成功完成的执行结果，同样，<code>reject()</code> 可传入一个参数作为 Promise 实例错误时的结果：</p>

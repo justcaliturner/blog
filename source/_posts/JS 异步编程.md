@@ -102,8 +102,8 @@ demo1().then(demo2)
 ```javascript
 const demo = new Promise((resolve, reject)=>{
     // 其他代码
-    resolve() // 已兑现时调用
-    reject() // 已拒绝时调用
+    resolve() // 成功完成时调用
+    reject() // 发生错误时调用
 })
 ```
 
