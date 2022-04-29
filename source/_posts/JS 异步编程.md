@@ -98,7 +98,7 @@ demo1().then(demo2)
 
 
 ###### 参数
-该对象可传入一个类型为函数的参数，用于被构造函数执行，该函数可传入 2 个参数，它们的类型也是函数，第一个参数会在 Promise 实例已兑现时调用，第二个参数会在 Promise 实例已拒绝时调用：
+`Promise` 对象可传入一个类型为函数的参数，用于被构造函数执行，该函数可传入 2 个参数，它们的类型也是函数，第一个参数会在 Promise 实例成功完成时调用，第二个参数会在 Promise 实例发生错误拒绝时调用：
 ```javascript
 const demo = new Promise((resolve, reject)=>{
     // 其他代码
@@ -109,12 +109,12 @@ const demo = new Promise((resolve, reject)=>{
 
 `resolve()` 可传入一个参数，作为 Promise 实例成功完成的执行结果，同样，`reject()` 可传入一个参数作为 Promise 实例错误时的结果：
 ```javascript
-const demo1 = new Promise((resolve, reject)=>{
+const demo1 = new Promise((resolve, reject) => {
     const result = 'Success!'
     resolve(result) // result 将会作为执行成功的结果
 })
 
-const demo2 = new Promise((resolve, reject)=>{
+const demo2 = new Promise((resolve, reject) => {
     const error = new Error('failed')
     reject(error) // result 将会作为执行错误的结果
 })
@@ -124,14 +124,13 @@ const demo2 = new Promise((resolve, reject)=>{
 `Promise.then()` 顾名思义就是当 Promise 实例完成后（执行错误或成功），继续执行其他代码的方法，它可传入一个类型为函数的参数作为继续执行的函数，该函数会接收一个参数，该参数是 Promise 实例的执行结果，它会作为参数传入该函数内。
 
 ```javascript
-const demo = new Promise((resolve, reject)=>{
+const demo = new Promise((resolve, reject) => {
     const result = 'Success!'
     resolve(result)
 })
-demo.then((result)=>{
+demo.then(result => {
     console.log(result) // Success!
 })
-
 ```
 
 ###### `Promise.all()`
@@ -143,7 +142,6 @@ const demo2 = 2;
 const demo3 = new Promise((resolve, reject) => {
   setTimeout(resolve, 100, 3);
 });
-
 Promise.all([demo1, demo2, demo3]).then((values) => {
   console.log(values); // [ 1, 2, 3 ]
 });
@@ -171,7 +169,6 @@ const demo3 = function () {
         resolve()
     })
 }
-
 demo1().then(demo2).then(demo3) // 1, 2, 3
 ```
 
@@ -182,13 +179,13 @@ demo1().then(demo2).then(demo3) // 1, 2, 3
 `await` 操作符用于等待一个 Promise 对象敲定其状态, 它只能在异步函数 async function 内部使用，其简化了 Promise 的一些常规写法：
 
 ```javascript
-async function foo() {
+async function demo() {
    await 1
 }
 ```
 以上代码等价于
 ```javascript
-function foo() {
+function demo() {
    return Promise.resolve(1).then(() => undefined)
 }
 ```
@@ -215,13 +212,11 @@ const demo3 = function () {
         resolve()
     })
 }
-
 function demo(){
     demo1()
     demo2()
     demo3()
 }
-
 async function asyncDemo(){
     await demo1()
     await demo2()

@@ -142,7 +142,7 @@
 <span class="hljs-comment">// 因为 demo2 需要等 demo1 的 Promise 实例的结果出现才会执行</span></code></pre>
 
 
-<h6 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h6><p>该对象可传入一个类型为函数的参数，用于被构造函数执行，该函数可传入 2 个参数，它们的类型也是函数，第一个参数会在 Promise 实例已兑现时调用，第二个参数会在 Promise 实例已拒绝时调用：</p>
+<h6 id="参数"><a href="#参数" class="headerlink" title="参数"></a>参数</h6><p><code>Promise</code> 对象可传入一个类型为函数的参数，用于被构造函数执行，该函数可传入 2 个参数，它们的类型也是函数，第一个参数会在 Promise 实例成功完成时调用，第二个参数会在 Promise 实例发生错误拒绝时调用：</p>
 <pre><code class="hljs javascript"><span class="hljs-keyword">const</span> demo = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>)=&gt;</span>&#123;
     <span class="hljs-comment">// 其他代码</span>
     <span class="hljs-title function_">resolve</span>() <span class="hljs-comment">// 已兑现时调用</span>
@@ -150,25 +150,24 @@
 &#125;)</code></pre>
 
 <p><code>resolve()</code> 可传入一个参数，作为 Promise 实例成功完成的执行结果，同样，<code>reject()</code> 可传入一个参数作为 Promise 实例错误时的结果：</p>
-<pre><code class="hljs javascript"><span class="hljs-keyword">const</span> demo1 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>)=&gt;</span>&#123;
+<pre><code class="hljs javascript"><span class="hljs-keyword">const</span> demo1 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>) =&gt;</span> &#123;
     <span class="hljs-keyword">const</span> result = <span class="hljs-string">&#x27;Success!&#x27;</span>
     <span class="hljs-title function_">resolve</span>(result) <span class="hljs-comment">// result 将会作为执行成功的结果</span>
 &#125;)
 
-<span class="hljs-keyword">const</span> demo2 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>)=&gt;</span>&#123;
+<span class="hljs-keyword">const</span> demo2 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>) =&gt;</span> &#123;
     <span class="hljs-keyword">const</span> error = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Error</span>(<span class="hljs-string">&#x27;failed&#x27;</span>)
     <span class="hljs-title function_">reject</span>(error) <span class="hljs-comment">// result 将会作为执行错误的结果</span>
 &#125;)</code></pre>
 
 <h6 id="Promise-then"><a href="#Promise-then" class="headerlink" title="Promise.then()"></a><code>Promise.then()</code></h6><p><code>Promise.then()</code> 顾名思义就是当 Promise 实例完成后（执行错误或成功），继续执行其他代码的方法，它可传入一个类型为函数的参数作为继续执行的函数，该函数会接收一个参数，该参数是 Promise 实例的执行结果，它会作为参数传入该函数内。</p>
-<pre><code class="hljs javascript"><span class="hljs-keyword">const</span> demo = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>)=&gt;</span>&#123;
+<pre><code class="hljs javascript"><span class="hljs-keyword">const</span> demo = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>) =&gt;</span> &#123;
     <span class="hljs-keyword">const</span> result = <span class="hljs-string">&#x27;Success!&#x27;</span>
     <span class="hljs-title function_">resolve</span>(result)
 &#125;)
-demo.<span class="hljs-title function_">then</span>(<span class="hljs-function">(<span class="hljs-params">result</span>)=&gt;</span>&#123;
+demo.<span class="hljs-title function_">then</span>(<span class="hljs-function"><span class="hljs-params">result</span> =&gt;</span> &#123;
     <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(result) <span class="hljs-comment">// Success!</span>
-&#125;)
-</code></pre>
+&#125;)</code></pre>
 
 <h6 id="Promise-all"><a href="#Promise-all" class="headerlink" title="Promise.all()"></a><code>Promise.all()</code></h6><p><code>Promise.all()</code> 是等待所有的 Promise 实例都完成（或第一个失败）后调用的方法：</p>
 <pre><code class="hljs javascript"><span class="hljs-keyword">const</span> demo1 = <span class="hljs-title class_">Promise</span>.<span class="hljs-title function_">resolve</span>(<span class="hljs-number">1</span>);
@@ -176,7 +175,6 @@ demo.<span class="hljs-title function_">then</span>(<span class="hljs-function">
 <span class="hljs-keyword">const</span> demo3 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>) =&gt;</span> &#123;
   <span class="hljs-built_in">setTimeout</span>(resolve, <span class="hljs-number">100</span>, <span class="hljs-number">3</span>);
 &#125;);
-
 <span class="hljs-title class_">Promise</span>.<span class="hljs-title function_">all</span>([demo1, demo2, demo3]).<span class="hljs-title function_">then</span>(<span class="hljs-function">(<span class="hljs-params">values</span>) =&gt;</span> &#123;
   <span class="hljs-variable language_">console</span>.<span class="hljs-title function_">log</span>(values); <span class="hljs-comment">// [ 1, 2, 3 ]</span>
 &#125;);</code></pre>
@@ -201,17 +199,16 @@ demo.<span class="hljs-title function_">then</span>(<span class="hljs-function">
         <span class="hljs-title function_">resolve</span>()
     &#125;)
 &#125;
-
 <span class="hljs-title function_">demo1</span>().<span class="hljs-title function_">then</span>(demo2).<span class="hljs-title function_">then</span>(demo3) <span class="hljs-comment">// 1, 2, 3</span></code></pre>
 
 <br>
 
 <h5 id="async-await"><a href="#async-await" class="headerlink" title="async await"></a><code>async</code> <code>await</code></h5><p><code>async</code> 可声明一个函数为异步函数<br><code>await</code> 操作符用于等待一个 Promise 对象敲定其状态, 它只能在异步函数 async function 内部使用，其简化了 Promise 的一些常规写法：</p>
-<pre><code class="hljs javascript"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">foo</span>(<span class="hljs-params"></span>) &#123;
+<pre><code class="hljs javascript"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">demo</span>(<span class="hljs-params"></span>) &#123;
    <span class="hljs-keyword">await</span> <span class="hljs-number">1</span>
 &#125;</code></pre>
 <p>以上代码等价于</p>
-<pre><code class="hljs javascript"><span class="hljs-keyword">function</span> <span class="hljs-title function_">foo</span>(<span class="hljs-params"></span>) &#123;
+<pre><code class="hljs javascript"><span class="hljs-keyword">function</span> <span class="hljs-title function_">demo</span>(<span class="hljs-params"></span>) &#123;
    <span class="hljs-keyword">return</span> <span class="hljs-title class_">Promise</span>.<span class="hljs-title function_">resolve</span>(<span class="hljs-number">1</span>).<span class="hljs-title function_">then</span>(<span class="hljs-function">() =&gt;</span> <span class="hljs-literal">undefined</span>)
 &#125;</code></pre>
 
@@ -236,13 +233,11 @@ demo.<span class="hljs-title function_">then</span>(<span class="hljs-function">
         <span class="hljs-title function_">resolve</span>()
     &#125;)
 &#125;
-
 <span class="hljs-keyword">function</span> <span class="hljs-title function_">demo</span>(<span class="hljs-params"></span>)&#123;
     <span class="hljs-title function_">demo1</span>()
     <span class="hljs-title function_">demo2</span>()
     <span class="hljs-title function_">demo3</span>()
 &#125;
-
 <span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">asyncDemo</span>(<span class="hljs-params"></span>)&#123;
     <span class="hljs-keyword">await</span> <span class="hljs-title function_">demo1</span>()
     <span class="hljs-keyword">await</span> <span class="hljs-title function_">demo2</span>()
