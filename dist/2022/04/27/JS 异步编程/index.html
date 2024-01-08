@@ -78,7 +78,7 @@
 </ul>
 </li>
 </ul>
-<h5 id="事件轮询中异步任务的执行逻辑"><a href="#事件轮询中异步任务的执行逻辑" class="headerlink" title="事件轮询中异步任务的执行逻辑"></a>事件轮询中异步任务的执行逻辑</h5><p>异步任务分为宏任务和微任务，事件轮询中会先执行宏任务，再执行微任务，依次循环往复。<br><img src="/./images/4.jpg" alt="This is an image"></p>
+<h5 id="事件轮询中异步任务的执行逻辑"><a href="#事件轮询中异步任务的执行逻辑" class="headerlink" title="事件轮询中异步任务的执行逻辑"></a>事件轮询中异步任务的执行逻辑</h5><p>异步任务分为宏任务和微任务，一次轮询中会先执行完所有的微任务再执行宏任务，依次循环往复。</p>
 <ul>
 <li>异步任务 Asynchronous task<ul>
 <li>宏任务 Macro task<ul>
@@ -211,7 +211,15 @@ demo.<span class="hljs-title function_">then</span>(<span class="hljs-function">
 <pre><code class="hljs javascript"><span class="hljs-keyword">function</span> <span class="hljs-title function_">demo</span>(<span class="hljs-params"></span>) &#123;
    <span class="hljs-keyword">return</span> <span class="hljs-title class_">Promise</span>.<span class="hljs-title function_">resolve</span>(<span class="hljs-number">1</span>).<span class="hljs-title function_">then</span>(<span class="hljs-function">() =&gt;</span> <span class="hljs-literal">undefined</span>)
 &#125;</code></pre>
-
+<p>以下函数在执行的时候，“暂停”在了 (*) 那一行，并在 promise settle 时，拿到 result 作为结果继续往下执行。所以上面这段代码在一秒后显示 “done!”。提示：await 实际上会暂停函数的执行，直到 promise 状态变为 settled，然后以 promise 的结果继续执行。这个行为不会耗费任何 CPU 资源，因为 JavaScript 引擎可以同时处理其他任务：执行其他脚本，处理事件等。</p>
+<pre><code class="hljs javascript"><span class="hljs-keyword">async</span> <span class="hljs-keyword">function</span> <span class="hljs-title function_">f</span>(<span class="hljs-params"></span>) &#123;
+  <span class="hljs-keyword">let</span> promise = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>) =&gt;</span> &#123;
+    <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> <span class="hljs-title function_">resolve</span>(<span class="hljs-string">&quot;done!&quot;</span>), <span class="hljs-number">1000</span>)
+  &#125;);
+  <span class="hljs-keyword">let</span> result = <span class="hljs-keyword">await</span> promise; <span class="hljs-comment">// 等待，直到 promise resolve (*)</span>
+  <span class="hljs-title function_">alert</span>(result); <span class="hljs-comment">// &quot;done!&quot;</span>
+&#125;
+<span class="hljs-title function_">f</span>();</code></pre>
 <p>如下案例简化了上文 <code>Promise</code> 中的最后一个案例</p>
 <pre><code class="hljs javascript"><span class="hljs-keyword">const</span> demo1 = <span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) &#123;
     <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Promise</span>(<span class="hljs-function">(<span class="hljs-params">resolve, reject</span>) =&gt;</span> &#123;

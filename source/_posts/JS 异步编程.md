@@ -33,8 +33,7 @@ JavaScript 引擎是单线程的，故在其主线程中只能进行同步编程
     > JavaScript 运行时的一个待处理消息的消息队列，每一个消息都关联着一个用以处理这个消息的回调函数，其逻辑是先进先出。
 
 ##### 事件轮询中异步任务的执行逻辑
-异步任务分为宏任务和微任务，事件轮询中会先执行宏任务，再执行微任务，依次循环往复。
-![This is an image](./images/4.jpg)
+异步任务分为宏任务和微任务，一次轮询中会先执行完所有的微任务再执行宏任务，依次循环往复。
 - 异步任务 Asynchronous task
     - 宏任务 Macro task
         - script 
@@ -189,7 +188,18 @@ function demo() {
    return Promise.resolve(1).then(() => undefined)
 }
 ```
+以下函数在执行的时候，“暂停”在了 (*) 那一行，并在 promise settle 时，拿到 result 作为结果继续往下执行。所以上面这段代码在一秒后显示 “done!”。提示：await 实际上会暂停函数的执行，直到 promise 状态变为 settled，然后以 promise 的结果继续执行。这个行为不会耗费任何 CPU 资源，因为 JavaScript 引擎可以同时处理其他任务：执行其他脚本，处理事件等。
 
+```javascript
+async function f() {
+  let promise = new Promise((resolve, reject) => {
+    setTimeout(() => resolve("done!"), 1000)
+  });
+  let result = await promise; // 等待，直到 promise resolve (*)
+  alert(result); // "done!"
+}
+f();
+```
 如下案例简化了上文 `Promise` 中的最后一个案例
 ```javascript
 const demo1 = function () {
