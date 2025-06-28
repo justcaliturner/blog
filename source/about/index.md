@@ -14,8 +14,6 @@ date: 2022-03-19 00:04:36
 
 ### 联系我
 
-[Twitter](https://twitter.com/justcaliturner)
-
 [Github](https://github.com/justcaliturner)
 
-[Portfolio](https://www.vicuxd.com)
+[Portfolio](https://www.vicless.com)
